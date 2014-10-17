@@ -17,11 +17,15 @@ return [
             'enableAutoLogin' => true,
         ],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'class' => 'yii\log\EmailTarget',
+                    'levels' => ['error', 'warning', 'trace', 'info'],
+                    'message' => [
+                        'from' => ['log@conceptclub.ru'],
+                        'to' => ['andrushin.anton@gmail.com'],
+                        'subject' => 'Conceptclub errors and warnings',
+                    ],
                 ],
             ],
         ],
