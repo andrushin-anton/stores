@@ -22,5 +22,8 @@ return [
                 'database' => 0,
             ],
         ],
+        'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+        ],
     ],
 ];
