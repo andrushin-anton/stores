@@ -26,4 +26,7 @@ return [
             'traceLevel' => YII_DEBUG ? 3 : 0,
         ],
     ],
+    'params' => [
+        'urls' => ['http://www.conceptclub.ru', 'http://acoolakids.ru', 'http://www.infinitylingerie.com'],
+    ]
 ];

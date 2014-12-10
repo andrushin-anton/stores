@@ -168,4 +168,9 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
+    public function actionCreateSession($sessionId)
+    {
+        setcookie('PHPSESSID', $sessionId, time() + 3600, '/');
+    }
 }
