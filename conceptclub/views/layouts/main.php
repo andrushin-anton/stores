@@ -5,6 +5,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use conceptclub\assets\AppAsset;
 use conceptclub\widgets\Alert;
+use common\helpers\Common as BaseHelper;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -42,9 +43,8 @@ AppAsset::register($this);
                 $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
             } else {
                 $menuItems[] = [
-                    'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                    'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post']
+                    'label' => 'Logout (' . Yii::$app->user->identity->email . ')',
+                    'url' => ['/site/logout']
                 ];
             }
             echo Nav::widget([
@@ -69,6 +69,8 @@ AppAsset::register($this);
         <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>
+
+    <?php echo BaseHelper::createSession()?>
 
     <?php $this->endBody() ?>
 </body>

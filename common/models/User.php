@@ -11,29 +11,44 @@ use yii\web\IdentityInterface;
  * User model
  *
  * @property integer $id
- * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
  * @property string $email
- * @property string $auth_key
- * @property integer $role
- * @property integer $status
+ * @property string $password
+ * @property string $f_name
+ * @property string $l_name
+ * @property string $t_name
+ * @property integer $active
+ * @property string $code
+ * @property integer $newsletter
+ * @property integer $smsnewsletter
+ * @property integer $concept_smsnewsletter
+ * @property integer $concept_newsletter
+ * @property integer $subscribe_remind_letter
+ * @property string $avatar
+ * @property string $password_reset_token
+ * @property integer $last_activity_time
+ * @property integer $rate
+ * @property integer $vk_id
+ * @property integer $fb_id
+ * @property integer $region_id
+ * @property integer $city_id
+ * @property integer $blacklist
+ * @property integer $operator
+ * @property integer $from_site
  * @property integer $created_at
  * @property integer $updated_at
- * @property string $password write-only password
  */
+
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
-    const ROLE_USER = 10;
+    const STATUS_ACTIVE = 1;
 
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return '{{%users}}';
     }
 
     /**
@@ -52,11 +67,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
-
-            ['role', 'default', 'value' => self::ROLE_USER],
-            ['role', 'in', 'range' => [self::ROLE_USER]],
+            ['active', 'default', 'value' => self::STATUS_ACTIVE],
+            ['active', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
     }
 
@@ -65,7 +77,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['id' => $id, 'active' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -84,7 +96,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['email' => $username, 'active' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -101,7 +113,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         return static::findOne([
             'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+            'active' => self::STATUS_ACTIVE,
         ]);
     }
 
@@ -135,7 +147,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-        return $this->auth_key;
+        return $this->getPrimaryKey();
     }
 
     /**
@@ -154,7 +166,17 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return $this->comparePassword($this->generatePasswordHash($password), $this->password);
+    }
+
+    /**
+     * @param $test
+     * @param $password
+     * @return bool
+     */
+    private function comparePassword($test, $password)
+    {
+        return Yii::$app->security->compareString($test, $password);
     }
 
     /**
@@ -164,7 +186,16 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+        $this->password = $this->generatePasswordHash($password);
+    }
+
+    /**
+     * @param $password
+     * @return string
+     */
+    public function generatePasswordHash($password)
+    {
+        return md5($password . 'hfjj999');
     }
 
     /**
@@ -172,7 +203,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function generateAuthKey()
     {
-        $this->auth_key = Yii::$app->security->generateRandomString();
+        //$this->auth_key = Yii::$app->security->generateRandomString();
     }
 
     /**
@@ -189,5 +220,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public function getUserName()
+    {
+        return $this->f_name.' '.$this->l_name;
     }
 }

@@ -12,16 +12,27 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'acoolakids\controllers',
     'components' => [
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+                '/check-code/<userId:\d+>/<code:\d+>' => 'site/check-code',
+            ],
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
         ],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
-                    'class' => 'yii\log\FileTarget',
+                    'class' => 'yii\log\EmailTarget',
                     'levels' => ['error', 'warning'],
+                    'message' => [
+                        'from' => ['log@acoolakids.ru'],
+                        'to' => ['andrushin.anton@gmail.com'],
+                        'subject' => 'Acoolakids errors and warnings',
+                    ],
                 ],
             ],
         ],
