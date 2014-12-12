@@ -1,0 +1,1 @@
+*/2 * * * * cd /var/www/stores && php yii main/mail  #sends emails

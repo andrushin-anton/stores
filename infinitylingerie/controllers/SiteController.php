@@ -3,9 +3,9 @@ namespace infinitylingerie\controllers;
 
 use Yii;
 use common\models\LoginForm;
-use infinitylingerie\models\PasswordResetRequestForm;
-use infinitylingerie\models\ResetPasswordForm;
-use infinitylingerie\models\SignupForm;
+use common\models\PasswordResetRequestForm;
+use common\models\ResetPasswordForm;
+use common\models\SignupForm;
 use infinitylingerie\models\ContactForm;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -41,10 +41,7 @@ class SiteController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
+                'class' => VerbFilter::className()
             ],
         ];
     }
@@ -86,9 +83,12 @@ class SiteController extends Controller
         }
     }
 
-    public function actionLogout()
+    public function actionLogout($sess=false)
     {
         Yii::$app->user->logout();
+
+        if(!$sess)
+            Yii::$app->session->set('logout', true);
 
         return $this->goHome();
     }
@@ -172,5 +172,24 @@ class SiteController extends Controller
     public function actionCreateSession($sessionId)
     {
         setcookie('PHPSESSID', $sessionId, time() + 3600, '/');
+    }
+
+    public function actionCheckCode($userId, $code)
+    {
+        if(!Yii::$app->user->isGuest)
+            return $this->goHome();
+
+        $user = User::find()->where(['id' => $userId])->one();
+        if(!$user)
+            throw new HttpException(404, 'Not found');
+
+        if($user->code == $code)
+        {
+            $user->active = User::STATUS_ACTIVE;
+            $user->save();
+            return $this->actionLogin();
+
+        }
+        return $this->goHome();
     }
 }

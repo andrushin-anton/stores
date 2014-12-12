@@ -2,6 +2,12 @@
 return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
+        'shoppingCart' => [
+            'class' => 'common\components\ShoppingCart'
+        ],
+        'mailFactory' => [
+            'class' => 'common\components\MailFactory'
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -26,7 +32,4 @@ return [
             'traceLevel' => YII_DEBUG ? 3 : 0,
         ],
     ],
-    'params' => [
-        'urls' => ['http://www.conceptclub.ru', 'http://acoolakids.ru', 'http://www.infinitylingerie.com'],
-    ]
 ];

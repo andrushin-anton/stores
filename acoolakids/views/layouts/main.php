@@ -5,6 +5,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use acoolakids\assets\AppAsset;
 use acoolakids\widgets\Alert;
+use common\helpers\Common as BaseHelper;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -43,8 +44,7 @@ AppAsset::register($this);
             } else {
                 $menuItems[] = [
                     'label' => 'Logout (' . Yii::$app->user->identity->email . ')',
-                    'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post']
+                    'url' => ['/site/logout']
                 ];
             }
             echo Nav::widget([
@@ -70,7 +70,7 @@ AppAsset::register($this);
         </div>
     </footer>
 
-    <?php echo $this->render('../site/_optional')?>
+    <?php echo BaseHelper::createSession()?>
 
     <?php $this->endBody() ?>
 </body>

@@ -12,6 +12,13 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'infinitylingerie\controllers',
     'components' => [
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+                '/check-code/<userId:\d+>/<code:\d+>' => 'site/check-code',
+            ],
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -20,7 +27,7 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\EmailTarget',
-                    'levels' => ['error', 'warning', 'trace', 'info'],
+                    'levels' => ['error', 'warning'],
                     'message' => [
                         'from' => ['log@infinitylingerie.com'],
                         'to' => ['andrushin.anton@gmail.com'],

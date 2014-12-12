@@ -24,6 +24,7 @@ use yii\web\IdentityInterface;
  * @property integer $concept_newsletter
  * @property integer $subscribe_remind_letter
  * @property string $avatar
+ * @property string $password_reset_token
  * @property integer $last_activity_time
  * @property integer $rate
  * @property integer $vk_id
@@ -32,6 +33,7 @@ use yii\web\IdentityInterface;
  * @property integer $city_id
  * @property integer $blacklist
  * @property integer $operator
+ * @property integer $from_site
  * @property integer $created_at
  * @property integer $updated_at
  */
@@ -218,5 +220,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public function getUserName()
+    {
+        return $this->f_name.' '.$this->l_name;
     }
 }

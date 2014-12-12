@@ -1,4 +1,6 @@
 <?php
 return [
-    'adminEmail' => 'admin@example.com',
+    'appId' => 2,
+    'currentTitle' => 'Acoolakids.ru',
+    'currentEmail' => 'info@acoolakids.ru',
 ];

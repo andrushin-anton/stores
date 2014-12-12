@@ -3,15 +3,16 @@ namespace conceptclub\controllers;
 
 use Yii;
 use common\models\LoginForm;
-use conceptclub\models\PasswordResetRequestForm;
-use conceptclub\models\ResetPasswordForm;
-use conceptclub\models\SignupForm;
+use common\models\PasswordResetRequestForm;
+use common\models\ResetPasswordForm;
+use common\models\SignupForm;
 use conceptclub\models\ContactForm;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 
 /**
  * Site controller
@@ -41,10 +42,7 @@ class SiteController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
+                'class' => VerbFilter::className()
             ],
         ];
     }
@@ -88,7 +86,10 @@ class SiteController extends Controller
 
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        Yii::$app->user->logout($sess=false);
+
+        if(!$sess)
+            Yii::$app->session->set('logout', true);
 
         return $this->goHome();
     }
@@ -172,5 +173,24 @@ class SiteController extends Controller
     public function actionCreateSession($sessionId)
     {
         setcookie('PHPSESSID', $sessionId, time() + 3600, '/');
+    }
+
+    public function actionCheckCode($userId, $code)
+    {
+        if(!Yii::$app->user->isGuest)
+            return $this->goHome();
+
+        $user = User::find()->where(['id' => $userId])->one();
+        if(!$user)
+            throw new HttpException(404, 'Not found');
+
+        if($user->code == $code)
+        {
+            $user->active = User::STATUS_ACTIVE;
+            $user->save();
+            return $this->actionLogin();
+
+        }
+        return $this->goHome();
     }
 }
